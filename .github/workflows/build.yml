@@ -112,7 +112,7 @@ on:
       nanoversion:
         type: boolean
         description: 'Compile the nano version'
-        default: false
+        default: true
       oldreleases:
         type: boolean
         description: 'Delete old releases'
