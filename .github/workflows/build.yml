@@ -66,7 +66,7 @@ on:
         - ZTE-E8820S
         - ZTE-E8820V2
         - ZTT-RX6000
-        default: K2P
+        default: RM2100
       toolchain:
         description: 'Select the compilation toolchain'
         required: true
@@ -103,12 +103,12 @@ on:
         description: 'String JSON list of plug-ins'
         required: true
         type: string
-        default: '{"ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","smartdns":"y","vlmcsd":"y","ttyd":"n","iperf3":"n"}'
+        default: '{"ss":"n","v2ray":"n","xray":"n","trojan":"n","ssobfs":"n","smartdns":"n","vlmcsd":"n","ttyd":"n","iperf3":"n"}'
       customization:
         description: 'String JSON list of Customization'
         required: true
         type: string
-        default: '{"lanip":"192.168.2.1","signaccount":"admin","signpassword":"admin","wifi2gssid":"Padavan","wifi2gpsk":"1234567890","wifi5gssid":"Padavan-5G","wifi5gpsk":"1234567890"}'
+        default: '{"lanip":"10.10.10.10","signaccount":"admin","signpassword":"admin","wifi2gssid":"Padavan","wifi2gpsk":"1234567890","wifi5gssid":"Padavan-5G","wifi5gpsk":"1234567890"}'
       nanoversion:
         type: boolean
         description: 'Compile the nano version'
@@ -122,12 +122,7 @@ on:
         description: 'Delete old workflow runs'
         default: true
 env:
-  FIRMWARE_AUTHOR: TurBoTse
-  FIRMWARE_BRANCH: main
-  FIRMWARE_REPO: padavan
-  FIRMWARE_URL: https://github.com/TurBoTse/padavan.git
-  TOOLCHAIN_ROOT: toolchain/toolchain-mipsel
-  TOOLCHAIN_URL: https://github.com/TurBoTse/padavan/releases/download/toolchain
+  zhon
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -207,15 +202,16 @@ jobs:
           fi
           cp -f configs/templates/${{ matrix.target }}.config .config
           # include plugin
-          echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=${{env.ss}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=${{env.v2ray}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_XRAY=${{env.xray}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=${{env.trojan}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=${{env.ssobfs}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=${{env.smartdns}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_VLMCSD=${{env.vlmcsd}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_TTYD=${{env.ttyd}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_IPERF3=${{env.iperf3}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=n${{env.ss}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=n${{env.v2ray}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_XRAY=n${{env.xray}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=n${{env.trojan}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=n${{env.ssobfs}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=n${{env.smartdns}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_VLMCSD=n${{env.vlmcsd}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_TTYD=n${{env.ttyd}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_IPERF3=n${{env.iperf3}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=y${{env.adguardhome}}" >> .config
           # cpufreq
           if ${{ github.event.inputs.cpufreq == 'true' }}; then
             echo "CONFIG_FIRMWARE_INCLUDE_OC=y" >> .config
