@@ -103,7 +103,7 @@ on:
         description: 'String JSON list of plug-ins'
         required: true
         type: string
-        default: '{"smartdns":"y","adguardhome":"y"}'
+        default: '{"adbyby":"y"}'
       customization:
         description: 'String JSON list of Customization'
         required: true
@@ -207,8 +207,7 @@ jobs:
           fi
           cp -f configs/templates/${{ matrix.target }}.config .config
           # include plugin
-          echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=y${{env.smartdns}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=y${{env.adguardhome}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_ADBYBY=y${{env.adbyby}}" >> .config
           # cpufreq
           if ${{ github.event.inputs.cpufreq == 'true' }}; then
             echo "CONFIG_FIRMWARE_INCLUDE_OC=y" >> .config
