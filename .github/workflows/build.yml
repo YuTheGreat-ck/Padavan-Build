@@ -90,7 +90,7 @@ on:
       cpufreq:
         description: 'CPU Frequency (MHz)'
         type: boolean
-        default: false
+        default: true
       mt7621_oc:
         description: '1000Mhz=0x312 1100Mhz=0x362 1120Mhz=0x372 1200Mhz=0x3B2'
         type: choice
@@ -103,7 +103,7 @@ on:
         description: 'String JSON list of plug-ins'
         required: true
         type: string
-        default: '{"ss":"n","v2ray":"n","xray":"n","trojan":"n","ssobfs":"n","smartdns":"n","vlmcsd":"n","ttyd":"n","iperf3":"n"}'
+        default: '{"smartdns":"y","adguardhome":"y"}'
       customization:
         description: 'String JSON list of Customization'
         required: true
@@ -202,15 +202,7 @@ jobs:
           fi
           cp -f configs/templates/${{ matrix.target }}.config .config
           # include plugin
-          echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=n${{env.ss}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=n${{env.v2ray}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_XRAY=n${{env.xray}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=n${{env.trojan}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=n${{env.ssobfs}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=n${{env.smartdns}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_VLMCSD=n${{env.vlmcsd}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_TTYD=n${{env.ttyd}}" >> .config
-          echo "CONFIG_FIRMWARE_INCLUDE_IPERF3=n${{env.iperf3}}" >> .config
+          echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=y${{env.smartdns}}" >> .config
           echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=y${{env.adguardhome}}" >> .config
           # cpufreq
           if ${{ github.event.inputs.cpufreq == 'true' }}; then
