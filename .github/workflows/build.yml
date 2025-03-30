@@ -86,11 +86,11 @@ on:
         - mipsel-linux-uclibc
         - mipsel-linux-uclibc-gcc7
         - mipsel-linux-uclibc-gcc10
-        default: mipsel-linux-musl
+        default: mipsel-linux-musl-gcc10
       cpufreq:
         description: 'CPU Frequency (MHz)'
         type: boolean
-        default: false
+        default: true
       mt7621_oc:
         description: '1000Mhz=0x312 1100Mhz=0x362 1120Mhz=0x372 1200Mhz=0x3B2'
         type: choice
