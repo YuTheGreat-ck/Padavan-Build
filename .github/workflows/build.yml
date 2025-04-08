@@ -1,5 +1,3 @@
-# Build TurBoTse's kernal4.4 Padavan
-
 name: build custom
 
 on:
@@ -173,16 +171,8 @@ jobs:
           echo "wifi2gpsk=${{fromJson(inputs.customization).wifi2gpsk}}" >> $GITHUB_ENV
           echo "wifi5gssid=${{fromJson(inputs.customization).wifi5gssid}}" >> $GITHUB_ENV
           echo "wifi5gpsk=${{fromJson(inputs.customization).wifi5gpsk}}" >> $GITHUB_ENV
-          # plugins
-          echo "ss=${{fromJson(inputs.plugins).ss}}" >> $GITHUB_ENV
-          echo "v2ray=${{fromJson(inputs.plugins).v2ray}}" >> $GITHUB_ENV
-          echo "xray=${{fromJson(inputs.plugins).xray}}" >> $GITHUB_ENV
-          echo "trojan=${{fromJson(inputs.plugins).trojan}}" >> $GITHUB_ENV
-          echo "ssobfs=${{fromJson(inputs.plugins).ssobfs}}" >> $GITHUB_ENV
-          echo "smartdns=${{fromJson(inputs.plugins).smartdns}}" >> $GITHUB_ENV
-          echo "vlmcsd=${{fromJson(inputs.plugins).vlmcsd}}" >> $GITHUB_ENV
-          echo "ttyd=${{fromJson(inputs.plugins).ttyd}}" >> $GITHUB_ENV
-          echo "iperf3=${{fromJson(inputs.plugins).iperf3}}" >> $GITHUB_ENV
+          # Only enable adbyby plugin
+          echo "adbyby=${{fromJson(inputs.plugins).adbyby}}" >> $GITHUB_ENV
       - name: Compile the nano version
         if: ${{ github.event.inputs.nanoversion == 'true' }}
         run: |
@@ -190,63 +180,4 @@ jobs:
           for M in ${{ matrix.target }}; do if [ -f $M.config ]; then
             for MOD in ANTFS FAT EXFAT EXT2 EXT3 EXT4 XFS FUSE SWAP; do
               sed -i "s/CONFIG_FIRMWARE_ENABLE_${MOD}=y/CONFIG_FIRMWARE_ENABLE_${MOD}=n/" $M.config; done
-            for MOD in UVC HID SERIAL AUDIO XFRM QOS IMQ IFB NFSD NFSC CIFS NTFS_3G LPRD U2EC TCPDUMP HDPARM PARTED SMBD WINS SMBD_SYSLOG FTPD RPL2TP EAP_PEAP HTTPS SFTP DROPBEAR_FAST_CODE OPENSSH OPENVPN SSWAN OPENSSL_EC OPENSSL_EXE XUPNPD MINIDLNA FIREFLY FFMPEG_NEW TRANSMISSION TRANSMISSION_WEB_CONTROL ARIA ARIA_WEB_CONTROL CURL SCUTCLIENT GDUT_DRCOM DOGCOM MINIEAP NJIT_CLIENT SOFTETHERVPN_SERVER SOFTETHERVPN_CLIENT SOFTETHERVPN_CMD VLMCSD TTYD LITE LRZSZ HTOP NANO IPERF3 DUMP1090 RTL_SDR MTR SOCAT SRELAY MENTOHUST FRPC FRPS REDSOCKS SHADOWSOCKS XRAY V2RAY TROJAN SSOBFS SINGBOX NAIVEPROXY ADBYBY DNSFORWARDER SMARTDNS ADGUARDHOME ZEROTIER ALIDDNS DDNSTO ALDRIVER SQM WIREGUARD; do
-              sed -i "s/CONFIG_FIRMWARE_INCLUDE_${MOD}=y/CONFIG_FIRMWARE_INCLUDE_${MOD}=n/" $M.config; done
-          fi; done
-      - name: Modify and customize
-        run: |
-          sed -i '/cp -f/d' $FIRMWARE_REPO/Makefile
-          # if [ -d custom/trunk ]; then cp -rf custom/trunk/* ${{ env.TRUNK_DIR }}/; fi
-          sh custom/scripts/setip.sh '${{ env.lanip }}' '${{ env.TRUNK_DIR }}/user/shared/src/defaults.h' '${{ env.TRUNK_DIR }}/user/www/dict/CN.dict'
-          sh custom/scripts/setaccount.sh '${{ env.signaccount }}' '${{ env.signpassword }}' '${{ env.TRUNK_DIR }}/user/shared/src/defaults.h'
-          sh custom/scripts/setwifi.sh '${{ env.wifi2gssid }}' '${{ env.wifi2gpsk }}' '${{ env.wifi5gssid }}' '${{ env.wifi5gpsk }}' '${{ env.TRUNK_DIR }}/user/shared/src/defaults.h'
-          cd ${{ env.TRUNK_DIR }}
-          if [ ! -f configs/templates/${{ matrix.target }}.config ]; then
-            echo "configs/templates/${{ matrix.target }}.config not found"
-          exit 0
-          fi
-          cp -f configs/templates/${{ matrix.target }}.config .config
-          # include plugin
-          echo "CONFIG_FIRMWARE_INCLUDE_ADBYBY=y${{env.adbyby}}" >> .config
-          # cpufreq
-          if ${{ github.event.inputs.cpufreq == 'true' }}; then
-            echo "CONFIG_FIRMWARE_INCLUDE_OC=y" >> .config
-            echo "CONFIG_FIRMWARE_MT7621_OC=${{ inputs.mt7621_oc }}" >> .config
-          fi
-      - name: Start build firmware
-        run: |
-          cd $FIRMWARE_REPO
-          make ${{ matrix.target }} TOOLCHAIN=${{ matrix.toolchain }}
-          nano=""
-          if ${{ github.event.inputs.nanoversion == 'true' }}; then
-            nano="-nano"
-          fi
-          cpufreq=""
-          if ${{ github.event.inputs.cpufreq == 'true' }}; then
-            cpufreq="-cpufreq-${{ inputs.mt7621_oc }}"
-          fi
-          mkdir -p ${{ env.TRUNK_DIR }}/firmwares/
-          sudo mv ${{ env.TRUNK_DIR }}/images/*.trx ${{ env.TRUNK_DIR }}/firmwares/$FIRMWARE_AUTHOR-${{ matrix.target }}-4.4-${{ matrix.toolchaingcc }}${nano}${cpufreq}-${{ env.Compilation_time }}.trx
-      - uses: actions/upload-artifact@main
-        with:
-          name: ${{ matrix.target }}-${{ matrix.toolchaingcc }}
-          path: ${{ env.TRUNK_DIR }}/firmwares/*.trx
-      - uses: ncipollo/release-action@main
-        with:
-          commit: main
-          tag: ${{ env.Compilation_time }}
-          artifacts: ${{ env.TRUNK_DIR }}/firmwares/*.trx
-          allowUpdates: true
-          omitBodyDuringUpdate: true
-      - uses: dev-drprasad/delete-older-releases@master
-        if: ${{ github.event.inputs.oldreleases == 'true' }}
-        with:
-          keep_latest: 1
-          delete_tags: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: Mattraks/delete-workflow-runs@main
-        if: ${{ github.event.inputs.oldworkflow == 'true' }}
-        with:
-          retain_days: 0
-          keep_minimum_runs: 1
+            for MOD in UVC HID SERIAL AUDIO XFRM QOS IMQ IFB NFSD NFSC CIFS NTFS_3G LPRD U2EC TCPDUMP HDPARM PARTED SMBD WINS SMBD_SYSLOG FTPD RPL2TP EAP_PEAP HTTPS SFTP DROPBEAR_FAST_CODE OPENSSH OPENVPN SSWAN OPENSSL_EC OPENSSL_EXE XUPNPD MINIDLNA FIREFLY FFMPEG_NEW TRANSMISSION TRANSMISSION_WEB_CONTROL ARIA ARIA_WEB_CONTROL CURL SCUTCLIENT GDUT_DRCOM DOGCOM MINIEAP NJIT_CLIENT SOFTETHERVPN_SERVER SOFTETHERVPN_CLIENT SOFTETHERVPN_CMD VLMCSD TTYD LITE LRZSZ HTOP NANO IPERF3 DUMP1090 RTL_SDR MTR SOCAT SRELAY MENTOHUST FRPC FRPS REDSOCKS SHADOWSOCKS XRAY V2
