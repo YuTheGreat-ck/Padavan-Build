@@ -66,7 +66,7 @@ on:
           - ZTE-E8820S
           - ZTE-E8820V2
           - ZTT-RX6000
-        default: K2P
+        default: RM2100
       toolchain:
         description: "Select compilation toolchain"
         required: true
@@ -74,7 +74,7 @@ on:
         options:
           - mipsel-linux-musl
           - mipsel-linux-uclibc
-        default: mipsel-linux-musl
+        default: mipsel-linux-uclibc
       cpufreq:
         description: "Enable CPU Overclocking"
         type: boolean
@@ -87,12 +87,12 @@ on:
         description: 'Plugin JSON, e.g. {"ss":"y","xray":"n"}'
         required: true
         type: string
-        default: '{"ss":"y","v2ray":"n","xray":"y","trojan":"n","ssobfs":"y","smartdns":"y","vlmcsd":"y","ttyd":"n","iperf3":"n"}'
+        default: '{"dabyby":"y"}'
       customization:
         description: 'Customization JSON'
         required: true
         type: string
-        default: '{"lanip":"192.168.2.1","signaccount":"admin","signpassword":"admin","wifi2gssid":"Padavan","wifi2gpsk":"1234567890","wifi5gssid":"Padavan-5G","wifi5gpsk":"1234567890"}'
+        default: '{"lanip":"10.10.10.10","signaccount":"admin","signpassword":"admin","wifi2gssid":"MT7603E","wifi2gpsk":"1234567890","wifi5gssid":"MT7615E","wifi5gpsk":"1234567890"}'
       nanoversion:
         description: "Build Nano Version"
         type: boolean
