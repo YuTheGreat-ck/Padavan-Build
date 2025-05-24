@@ -87,7 +87,7 @@ on:
         description: 'Plugin JSON, e.g. {"ss":"y","xray":"n"}'
         required: true
         type: string
-        default: '{"dabyby":"y"}'
+        default: '{"adbyby":"y"}'
       customization:
         description: 'Customization JSON'
         required: true
